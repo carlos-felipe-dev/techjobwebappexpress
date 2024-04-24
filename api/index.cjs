@@ -31,6 +31,7 @@ app.use(cors({
 
 // Makes Express parse the JSON body of any requests and adds the body to the req object
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 app.use(async (req, res, next) => {
   try {
