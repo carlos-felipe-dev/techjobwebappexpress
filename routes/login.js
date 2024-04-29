@@ -16,14 +16,11 @@ module.exports = async (req, res) => {
     FROM "user" 
     WHERE username = $1`, [username]);
     
-    console.log('rows: ', rows)
     const user = rows[0];
-
-    console.log('user: ', user)
 
     // Verify user exists and password is correct
     if (rows.length === 0 || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ success: false, message: 'Username or password is incorrect' });
+      return res.status(401).json({ success: false, error: 'Username or password is incorrect' });
     }
     
     const payload = {
