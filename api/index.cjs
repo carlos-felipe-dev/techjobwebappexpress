@@ -317,12 +317,12 @@ app.post("/car", async (req, res) => {
 app.get("/createjoblisting", async (req, res) => {
   console.log("GET to /CreateJobListing");
 
-  const { rows: createjoblistings } = await req.db.query(`
+  const { rows: jobListings } = await req.db.query(`
     SELECT * FROM createjoblisting
   `);
 
-  console.log("All job listings", createjoblistings);
-  res.json({ createjoblistings });
+  console.log("All job listings", jobListings);
+  res.json({ jobListings });
 });
 
 //port cannot be 5432, thats the one Supabase uses
