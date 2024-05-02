@@ -319,16 +319,8 @@ app.get("/createjoblisting", async (req, res) => {
   res.json({ jobListings });
 });
 
-//port cannot be 5432, thats the one Supabase uses
-//dont worry about it, just use 5000
-
-// app.listen(5432, () => {
-//   console.log("Server ready on port 5432.");
-// });
-
-
-app.listen(5000, () => {
-  console.log("Server ready on port 5000.");
+app.listen(5432, () => {
+  console.log("Server ready on port 5432.");
 });
 
 module.exports = app;

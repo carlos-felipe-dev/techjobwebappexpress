@@ -81,6 +81,6 @@ module.exports = async (req, res) => {
     return res.status(200).json({ success: true })
   } catch (err) {
     console.log('Error: ', err);
-    res.status(500).json({ success: false, error: "An error occurred while registering" });
+    res.status(500).json({ success: false, error: "An error occurred while registering", err });
   }
 }
