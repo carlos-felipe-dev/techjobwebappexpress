@@ -76,7 +76,7 @@ module.exports = async (req, res) => {
     const maxAge = 31 * 24 * hour; //2 weeks
 
     //Set token in cookies
-    res.cookie('corgi_jobs_token', accessToken, { httpOnly: true, maxAge, domain: 'localhost:5137', path: '/' });
+    res.cookie('corgi_jobs_token', accessToken, { httpOnly: true, maxAge, domain: 'localhost:5173', path: '/' });
     // return res.redirect("/")
     return res.status(200).json({ success: true })
   } catch (err) {
