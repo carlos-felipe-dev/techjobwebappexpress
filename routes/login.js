@@ -38,7 +38,7 @@ module.exports = async (req, res) => {
     // Set JWT token in cookie
     const hour = 3600000;
     const maxAge = 31 * 24 * hour; //2 weeks
-    res.cookie('corgi_jobs_token', accessToken, { httpOnly: true, maxAge, domain: 'localhost', path: '/', secure: 'false', sameSite: 'lax'});
+    res.cookie('corgi_jobs_token', accessToken, { httpOnly: true, maxAge, domain: 'localhost', path: '/', secure: false, sameSite: 'lax'});
     // return res.redirect("/")
     return res.status(200).json({ success: true })
 
