@@ -33,14 +33,9 @@ module.exports = async (req, res) => {
     
     // Generate JWT token
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET);
-    // const refreshToken = jwt.sign(payload, process.env.NEXT_PUBLIC_JWT_REFRESH_SECRET);
     
-    // Set JWT token in cookie
-    const hour = 3600000;
-    const maxAge = 31 * 24 * hour; //2 weeks
-    res.cookie('corgi_jobs_token', accessToken, { httpOnly: true, maxAge, secure, sameSite: 'none'});
-    // return res.redirect("/")
-    return res.status(200).json({ success: true })
+    //Send JWT inside response
+    return res.status(201).json({ success: true, token: accessToken})
 
   } catch (error) {
     console.error('Error:', error);
