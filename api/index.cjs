@@ -1,17 +1,20 @@
 require("dotenv").config();
 
+const ENVIRONMENT = process.env.NODE_ENV;
+
 const express = require("express");
 const app = express();
 const cors = require("cors");
 const { Pool } = require("pg");
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
-const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const loginRoute = require("../routes/login");
 const registerCandidateRoute = require("../routes/register-candidate");
 const registerEmployerRoute = require("../routes/register-employer");
 const resumeRoute = require("../routes/resume");
+const insertResumeRoute = require("../routes/insertResume")
+const getUserRoute = require("../routes/getuser");
 // const port = process.env.POSTGRES_PORT;
 
 // const corsOptions = {
@@ -57,13 +60,52 @@ app.use(async (req, res, next) => {
   }
 });
 
+app.use(async function verifyJwt(req, res, next) {
+  const { authorization: authHeader } = req.headers;
+  if (!authHeader) res.json('Invalid authorization, no authorization headers');
+
+  const [scheme, jwtToken] = authHeader.split(' ');
+
+  if (scheme !== 'Bearer') res.json('Invalid authorization, invalid authorization scheme');
+
+  try {
+    const decodedJwtObject = jwt.verify(jwtToken, process.env.JWT_SECRET);
+
+    req.user = decodedJwtObject;
+    res.json({ success: true })
+  } catch (err) {
+    console.log(err);
+    if (
+      err.message && 
+      (err.message.toUpperCase() === 'INVALID TOKEN' || 
+      err.message.toUpperCase() === 'JWT EXPIRED')
+    ) {
+
+      req.status = err.status || 500;
+      req.body = err.message;
+      req.app.emit('jwt-error', err, req);
+    } else {
+
+      throw((err.status || 500), err.message);
+    }
+  }
+
+  await next();
+});
+
+app.get("/getuser", getUserRoute);
+
+app.get("/resume", resumeRoute);
+
+app.post("/insert-resume", insertResumeRoute )
+
 app.post("/register-candidate", registerCandidateRoute);
 
 app.post("/register-employer", registerEmployerRoute);
 
 app.post("/login", loginRoute);
 
-app.post("/resume", resumeRoute);
+
 
 app.post("/logout", async (req, res) => {
   try {
@@ -319,8 +361,16 @@ app.get("/createjoblisting", async (req, res) => {
   res.json({ jobListings });
 });
 
-app.listen(5432, () => {
-  console.log("Server ready on port 5432.");
-});
+if (ENVIRONMENT === "development") {
+  app.listen(5000, () => {
+    console.log("Server ready on port 5000.");
+  });
+}
+
+if(process.env.NODE_ENV === "production") {
+  app.listen(process.env.POSTGRES_PORT, () => {
+    console.log(`Server ready on port ${process.env.POSTGRES_PORT}`);
+  });
+}
 
 module.exports = app;
