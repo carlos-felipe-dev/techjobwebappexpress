@@ -14,6 +14,10 @@ const registerCandidateRoute = require("../routes/register-candidate");
 const registerEmployerRoute = require("../routes/register-employer");
 const resumeRoute = require("../routes/resume");
 const insertResumeRoute = require("../routes/insertResume")
+const insertInterviewRoute = require("../routes/interview")
+const insertTodoRoute = require("../routes/todo")
+const getInterviewRoute = require("../routes/getInterview")
+const getTodoRoute = require("../routes/getTodo")
 const getUserRoute = require("../routes/getuser");
 // const port = process.env.POSTGRES_PORT;
 
@@ -60,19 +64,27 @@ app.use(async (req, res, next) => {
   }
 });
 
+app.post("/register-candidate", registerCandidateRoute);
+
+app.post("/register-employer", registerEmployerRoute);
+
+app.post("/login", loginRoute);
+
+app.get("/getuser", getUserRoute);
+
 app.use(async function verifyJwt(req, res, next) {
   const { authorization: authHeader } = req.headers;
-  if (!authHeader) res.json('Invalid authorization, no authorization headers');
+  if (!authHeader) return res.json('Invalid authorization, no authorization headers');
 
   const [scheme, jwtToken] = authHeader.split(' ');
 
-  if (scheme !== 'Bearer') res.json('Invalid authorization, invalid authorization scheme');
+  if (scheme !== 'Bearer') return res.json('Invalid authorization, invalid authorization scheme');
 
   try {
     const decodedJwtObject = jwt.verify(jwtToken, process.env.JWT_SECRET);
 
     req.user = decodedJwtObject;
-    res.json({ success: true })
+    // res.json({ success: true })
   } catch (err) {
     console.log(err);
     if (
@@ -92,20 +104,19 @@ app.use(async function verifyJwt(req, res, next) {
 
   await next();
 });
-
-app.get("/getuser", getUserRoute);
+//Everything below needs authorization header
 
 app.get("/resume", resumeRoute);
 
 app.post("/insert-resume", insertResumeRoute )
 
-app.post("/register-candidate", registerCandidateRoute);
+app.post("/interview", insertInterviewRoute )
 
-app.post("/register-employer", registerEmployerRoute);
+app.post("/todo", insertTodoRoute )
 
-app.post("/login", loginRoute);
+app.get("/get-interview", getInterviewRoute )
 
-
+app.get("/get-todo", getTodoRoute )
 
 app.post("/logout", async (req, res) => {
   try {
