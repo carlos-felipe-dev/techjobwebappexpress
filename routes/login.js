@@ -33,9 +33,9 @@ module.exports = async (req, res) => {
     
     // Generate JWT token
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET);
-    
+    const data = accessToken
     //Send JWT inside response
-    return res.status(201).json({ success: true, token: accessToken})
+    return res.status(201).json({ success: true, data })
 
   } catch (error) {
     console.error('Error:', error);

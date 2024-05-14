@@ -378,9 +378,9 @@ if (ENVIRONMENT === "development") {
   });
 }
 
-if(process.env.NODE_ENV === "production") {
+if(ENVIRONMENT === "production") {
   app.listen(process.env.POSTGRES_PORT, () => {
-    console.log(`Server ready on port ${process.env.POSTGRES_PORT}`);
+    console.log(`Server ready on port ${process.env.POSTGRES_PORT}.`);
   });
 }
 

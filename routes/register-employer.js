@@ -76,15 +76,10 @@ module.exports = async (req, res) => {
       aud: ["corgi", "api"]
     }
 
-    // Generate JWT token
-    const accessToken = jwt.sign(payload, process.env.JWT_SECRET);
-    const hour = 3600000;
-    const maxAge = 31 * 24 * hour; //2 weeks
-
-    //Set token in cookies
-    res.cookie('corgi_jobs_token', accessToken, { httpOnly: true, maxAge });
-    // return res.redirect("/")
-    return res.status(200).json({ success: true })
+    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '30d'} );
+    const data = accessToken
+    //Send JWT inside response
+    return res.status(201).json({ success: true, data })
   } catch (err) {
     console.log('Error: ', err);
     res.status(500).json({ success: false, error: "An error occurred while registering" });

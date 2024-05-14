@@ -7,7 +7,9 @@ module.exports = async (req, res) => {
     WHERE user_id = $1
     `, [user_id]);
 
-    res.status(200).json({ success: true, data: rows });
+    const data = rows;
+    
+    res.status(200).json({ success: true, data });
 
   } catch(err) {
     console.error(err);
