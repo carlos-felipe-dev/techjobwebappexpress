@@ -13,6 +13,7 @@ const loginRoute = require("../routes/login");
 const registerCandidateRoute = require("../routes/register-candidate");
 const registerEmployerRoute = require("../routes/register-employer");
 const resumeRoute = require("../routes/resume");
+const deleteResumeRoute = require("../routes/delete-resume");
 const insertResumeRoute = require("../routes/insertResume")
 const insertInterviewRoute = require("../routes/interview")
 const insertTodoRoute = require("../routes/todo")
@@ -82,11 +83,15 @@ app.use(async function verifyJwt(req, res, next) {
 
   try {
     const decodedJwtObject = jwt.verify(jwtToken, process.env.JWT_SECRET);
-
+    console.log('Decoded jwt object: ', decodedJwtObject)
+    // return
+    // if(decodedJwtObject){
     req.user = decodedJwtObject;
+    
     // res.json({ success: true })
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
+    return res.status(401).json({ success: false, error: err.message})
     if (
       err.message && 
       (err.message.toUpperCase() === 'INVALID TOKEN' || 
@@ -107,6 +112,8 @@ app.use(async function verifyJwt(req, res, next) {
 //Everything below needs authorization header
 
 app.get("/resume", resumeRoute);
+
+app.delete("/delete-resume", deleteResumeRoute);
 
 app.post("/insert-resume", insertResumeRoute )
 
