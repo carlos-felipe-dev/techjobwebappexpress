@@ -19,7 +19,7 @@ const insertInterviewRoute = require("../routes/interview")
 const insertTodoRoute = require("../routes/todo")
 const getInterviewRoute = require("../routes/getInterview")
 const getTodoRoute = require("../routes/getTodo")
-const getUserRoute = require("../routes/getuser");
+const verifyUserRoute = require("../routes/verify-user");
 // const port = process.env.POSTGRES_PORT;
 
 // const corsOptions = {
@@ -71,7 +71,7 @@ app.post("/register-employer", registerEmployerRoute);
 
 app.post("/login", loginRoute);
 
-app.get("/getuser", getUserRoute);
+app.get("/verify-user", verifyUserRoute);
 
 app.use(async function verifyJwt(req, res, next) {
   const { authorization: authHeader } = req.headers;

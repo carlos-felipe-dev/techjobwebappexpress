@@ -1,4 +1,3 @@
-require('dotenv').config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 
@@ -32,7 +31,7 @@ module.exports = async (req, res) => {
 
     
     // Generate JWT token
-    const accessToken = jwt.sign(payload, process.env.JWT_SECRET);
+    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '30d' } );
     const data = accessToken
     //Send JWT inside response
     return res.status(201).json({ success: true, data })
@@ -40,5 +39,5 @@ module.exports = async (req, res) => {
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ success: false, error: 'An error occurred during login' });
-}
+  }
 }
